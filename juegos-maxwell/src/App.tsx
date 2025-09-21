@@ -1,8 +1,8 @@
-// src/App.tsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import Menu from "./pages/Menu";
 import GameCargaElectrica from "./components/GameCargaElectrica";
 import GameGaussMagnetico from "./components/GameGaussMagnetico";
+import ExplicacionVideo from "./pages/ExplicacionVideo"; // ← NUEVO
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -20,22 +20,20 @@ function Placeholder({ title }: { title: string }) {
 export default function App() {
   return (
     <Routes>
+      {/* Menú principal */}
       <Route path="/" element={<Menu />} />
 
-      {/* Juego 1 */}
+      {/* Juegos */}
       <Route path="/juegos/carga-electrica" element={<GameCargaElectrica />} />
-
-      {/* Juego 2 (nuevo) */}
       <Route path="/juegos/gauss-magnetico" element={<GameGaussMagnetico />} />
-
-      {/* Placeholders para los demás por ahora */}
       <Route path="/juegos/faraday" element={<Placeholder title="Ley de Faraday – Inducción" />} />
-      <Route
-        path="/juegos/ampere-maxwell"
-        element={<Placeholder title="Ley de Ampère–Maxwell" />}
-      />
+      <Route path="/juegos/ampere-maxwell" element={<Placeholder title="Ley de Ampère–Maxwell" />} />
       <Route path="/juegos/red-wifi" element={<Placeholder title="Red WiFi en Acción" />} />
 
+      {/* Video de explicación: vuelve al menú cuando termina */}
+      <Route path="/explicacion" element={<ExplicacionVideo />} />
+
+      {/* Fallback */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

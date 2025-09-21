@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 export default function GameTrenMagnetico() {
   const rootRef = useRef<HTMLDivElement | null>(null);
 
-  // ===== Canvas de ondas en bucle =====
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rafRef = useRef<number | null>(null);
 
@@ -28,17 +27,15 @@ export default function GameTrenMagnetico() {
 
       const emitters = Object.values(emittersRef.current);
       if (emitters.length) {
-        // Ondas compactas
-        const period = 1600;      // ms por ciclo
-        const maxR = 180;         // radio máximo (más pequeño)
-        const ringGap = 26;       // separación entre anillos
+        const period = 1600;      
+        const maxR = 180;         
+        const ringGap = 26;       
         const baseAlpha = 0.38;
 
         for (const em of emitters) {
-          const t = (now % period) / period; // 0..1
+          const t = (now % period) / period; 
           const baseR = t * maxR;
 
-          // dibujar varios anillos hacia atrás
           for (let k = 0; k < 8; k++) {
             const r = baseR - k * ringGap;
             if (r <= 10 || r >= maxR) continue;
@@ -101,7 +98,7 @@ export default function GameTrenMagnetico() {
     const couples = [0, 1, 2].map((i) =>
       root.querySelector<HTMLDivElement>(`#cpl-${i}`)!
     );
-    const coupleLoco = root.querySelector<HTMLDivElement>("#cpl-loco")!; // NUEVO
+    const coupleLoco = root.querySelector<HTMLDivElement>("#cpl-loco")!; 
     const loco = root.querySelector<HTMLDivElement>("#loco")!;
     const toast = root.querySelector<HTMLDivElement>("#toast")!;
     const trainArea = root.querySelector<HTMLDivElement>("#trainArea")!;
@@ -110,7 +107,6 @@ export default function GameTrenMagnetico() {
     const btnHelp = root.querySelector<HTMLButtonElement>("#btnHelp")!;
     const btnNext = root.querySelector<HTMLButtonElement>("#btnNext")!;
 
-    // Estado previo (para detectar transiciones)
     let prevLocoOk = false;
     const prevCoupleOk = [false, false, false];
 
@@ -133,12 +129,12 @@ export default function GameTrenMagnetico() {
       const R = carEl.dataset.right!;
       carEl.dataset.left = R;
       carEl.dataset.right = L;
-      const poles = carEl.querySelectorAll<HTMLElement>(".pole"); // [izq, der]
+      const poles = carEl.querySelectorAll<HTMLElement>(".pole"); 
       setPoleClass(poles[0], carEl.dataset.left!);
       setPoleClass(poles[1], carEl.dataset.right!);
     }
 
-    /* Regla de acople (loco a la izquierda) */
+    
     function polarityOkForSlot(
       carData: { left: string; right: string },
       pos: number
@@ -154,15 +150,12 @@ export default function GameTrenMagnetico() {
       return true;
     }
 
-    // Centro de un elemento (viewport)
     function getCenter(el: HTMLElement) {
       const r = el.getBoundingClientRect();
       return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
     }
 
-    // Actualiza indicadores + emisores (ondas)
     function refreshCouplers() {
-      // Loco ↔ Slot[0] usando #cpl-loco
       let locoOk = false;
       if (config[0]) {
         locoOk = config[0].left !== loco.dataset.right!;
@@ -174,15 +167,15 @@ export default function GameTrenMagnetico() {
       }
       if (!prevLocoOk && locoOk) {
         const { x, y } = getCenter(coupleLoco);
-        addEmitter("cpl-loco", x, y, 15); // tono distinto para loco
+        addEmitter("cpl-loco", x, y, 15); 
       } else if (prevLocoOk && !locoOk) {
         removeEmitter("cpl-loco");
       }
       prevLocoOk = locoOk;
 
-      // Entre slots: couples[0] es entre slot[0]-slot[1], etc.
+      
       for (let i = 1; i < config.length; i++) {
-        const idx = i - 1; // couples[idx] -> cpl-0, cpl-1, cpl-2
+        const idx = i - 1; 
         let ok = false;
         if (config[i - 1] && config[i]) {
           ok = config[i]!.left !== config[i - 1]!.right;
@@ -215,7 +208,6 @@ export default function GameTrenMagnetico() {
       const pos = Number(slot.getAttribute("data-pos"));
       const carData = { left: carEl.dataset.left!, right: carEl.dataset.right!, el: carEl };
 
-      // Si ya había, devolver al banco
       const prev = slot.querySelector<HTMLElement>(".car");
       if (prev) {
         prev.setAttribute("draggable", "true");
@@ -223,7 +215,7 @@ export default function GameTrenMagnetico() {
         bank.appendChild(prev);
       }
 
-      // Mover
+    
       slot.innerHTML = "";
       carEl.setAttribute("draggable", "false");
       (carEl.style as CSSStyleDeclaration).cursor = "default";
@@ -236,7 +228,7 @@ export default function GameTrenMagnetico() {
     }
 
     function clearSlots() {
-      // Quitar vagones
+ 
       slots.forEach((slot, i) => {
         const inside = slot.querySelector<HTMLElement>(".car");
         if (inside) {
@@ -245,16 +237,16 @@ export default function GameTrenMagnetico() {
           bank.appendChild(inside);
         }
         slot.classList.remove("filled", "drag-ok", "drag-bad");
-        slot.textContent = String(4 - i); // 4,3,2,1
+        slot.textContent = String(4 - i); 
       });
       for (let i = 0; i < config.length; i++) config[i] = null;
 
-      // Apagar emisores
+    
       removeAllEmitters();
       prevLocoOk = false;
       prevCoupleOk[0] = prevCoupleOk[1] = prevCoupleOk[2] = false;
 
-      // Reset indicadores
+
       coupleLoco.className = "couple";
       coupleLoco.textContent = "•";
       couples.forEach((c) => {
@@ -286,7 +278,7 @@ export default function GameTrenMagnetico() {
       return true;
     }
 
-    // Drag & drop
+    
     let dragging: HTMLElement | null = null;
 
     const onBankDragStart = (e: DragEvent) => {
@@ -302,7 +294,7 @@ export default function GameTrenMagnetico() {
     bank.addEventListener("dragstart", onBankDragStart);
     bank.addEventListener("dragend", onBankDragEnd);
 
-    // Doble clic en el MENÚ: girar
+    
     const onBankDblClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       const car = target?.closest(".car") as HTMLElement | null;
@@ -311,7 +303,7 @@ export default function GameTrenMagnetico() {
     };
     bank.addEventListener("dblclick", onBankDblClick);
 
-    // Clic derecho en cualquier vagón: girar (incluye los del tren)
+    
     const onContextMenu = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       const car = target?.closest(".car") as HTMLElement | null;
@@ -330,7 +322,7 @@ export default function GameTrenMagnetico() {
     };
     root.addEventListener("contextmenu", onContextMenu);
 
-    // Slots
+  
     slots.forEach((slot) => {
       const over = (e: DragEvent) => {
         if (!dragging) return;
@@ -381,7 +373,7 @@ export default function GameTrenMagnetico() {
       };
     });
 
-    // Botones
+    
     const onReset = () => {
       trainArea.classList.remove("moving");
       clearSlots();
@@ -415,7 +407,7 @@ export default function GameTrenMagnetico() {
         return;
       }
 
-  // Eliminar todas las ondas al pulsar comprobar
+  
   removeAllEmitters();
   refreshCouplers();
   msg(`✅ ¡Perfecto! ${count} vagón(es) correctamente acoplado(s). ¡En marcha! 🚂`, 2000);
@@ -433,11 +425,10 @@ export default function GameTrenMagnetico() {
     btnCheck.addEventListener("click", onCheck);
     btnNext.addEventListener("click", onNext);
 
-    // Inicial
-    // Limpia y NO llames a refreshCouplers aquí; clearSlots ya resetea todo
+    
     clearSlots();
 
-    // Cleanup
+    
     return () => {
       btnReset.removeEventListener("click", onReset);
       btnHelp.removeEventListener("click", onHelp);
@@ -460,7 +451,6 @@ export default function GameTrenMagnetico() {
 
   return (
     <div className="min-h-screen" ref={rootRef}>
-      {/* Canvas de ondas */}
       <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-[5]" />
 
       <Link
@@ -470,7 +460,7 @@ export default function GameTrenMagnetico() {
         ← Menú
       </Link>
 
-      {/* ====== ESTILOS ORIGINALES ====== */}
+      
       <style>{`
 *{margin:0;padding:0;box-sizing:border-box}
 body{overflow:hidden}
@@ -603,7 +593,6 @@ body{overflow:hidden}
 }
       `}</style>
 
-      {/* Fondo */}
       <div className="bg" />
 
       <div className="title">Conecta los vagones: polos opuestos se atraen (N–S)</div>
@@ -613,7 +602,6 @@ body{overflow:hidden}
           Arrastra un vagón a cada casilla. Si el acople es N–S, encaja. Luego pulsa “Comprobar”.
         </div>
 
-        {/* Banco de vagones */}
         <div className="panel">
           <h3>Vagones</h3>
           <div className="bank" id="bank">
@@ -641,18 +629,15 @@ body{overflow:hidden}
           </div>
         </div>
 
-        {/* Vía */}
         <div className="rail" />
         <div className="sleepers" />
 
-        {/* Tren: LOCO – (cpl-loco) – 4 – (cpl-0) – 3 – (cpl-1) – 2 – (cpl-2) – 1 */}
         <div className="train-area" id="trainArea">
           <div className="loco" id="loco" data-left="S" data-right="N">
             <span className="pole s">S</span><span>LOCO</span><span className="pole n">N</span>
             <div className="wheels"><div className="wheel" /><div className="wheel" /><div className="wheel" /></div>
           </div>
 
-          {/* NUEVO: acople visible entre loco y primer slot */}
           <div className="couple" id="cpl-loco">•</div>
 
           <div className="slots" id="slots">
@@ -666,7 +651,6 @@ body{overflow:hidden}
           </div>
         </div>
 
-        {/* Controles */}
         <div className="controls">
           <button className="btn check" id="btnCheck">🧲 Comprobar</button>
           <button className="btn reset" id="btnReset">🔄 Reiniciar</button>

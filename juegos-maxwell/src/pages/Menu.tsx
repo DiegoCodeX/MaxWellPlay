@@ -7,7 +7,7 @@ type Card = {
   icon: string;
   formula: string;
   to: string;
-  grad: string; // tailwind gradient
+  grad: string; 
 };
 
 const cards: Card[] = [
@@ -66,7 +66,6 @@ const cards: Card[] = [
 export default function Menu() {
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-indigo-400 to-purple-700 text-white">
-      {/* partículas de fondo muy livianas */}
       <div className="pointer-events-none absolute inset-0 opacity-30">
         {Array.from({ length: 50 }).map((_, i) => (
           <span
@@ -99,22 +98,18 @@ export default function Menu() {
               className={`group relative rounded-2xl h-64 shadow-xl overflow-hidden transition
                           hover:-translate-y-1 hover:shadow-2xl bg-gradient-to-br ${c.grad}`}
             >
-              {/* número */}
               <div className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/25 backdrop-blur flex items-center justify-center font-extrabold">
                 {c.id}
               </div>
 
-              {/* icono central */}
               <div className="absolute inset-0 grid place-items-center text-6xl opacity-30 group-hover:opacity-10 transition">
                 {c.icon}
               </div>
 
-              {/* fórmula arriba derecha */}
               <div className="absolute top-3 right-4 text-sm opacity-70 font-mono">
                 {c.formula}
               </div>
 
-              {/* info al hover */}
               <div className="absolute inset-0 p-6 flex flex-col justify-center text-center opacity-0 translate-y-4
                               group-hover:opacity-100 group-hover:translate-y-0 transition">
                 <h3 className="text-lg font-extrabold drop-shadow">{c.title}</h3>
@@ -124,7 +119,7 @@ export default function Menu() {
                   <Link
                     to={c.to}
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/25 backdrop-blur
-                               hover:bg-white/35 font-bold"
+                            hover:bg-white/35 font-bold"
                     aria-label={`Jugar ${c.title}`}
                   >
                     ▶ Play
@@ -136,7 +131,6 @@ export default function Menu() {
         </div>
       </main>
 
-      {/* keyframes locales */}
       <style>{`
         @keyframes float {
           0% { transform: translateY(0) rotate(0deg); opacity: 0; }

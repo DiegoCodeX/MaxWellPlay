@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  mysql55:
+    image: mysql:5.5
+    container_name: mysql55
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    command: ["mysqld", "--character-set-server=utf8", "--collation-server=utf8_general_ci"]
